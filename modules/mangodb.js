@@ -12,12 +12,18 @@ router.all("/:table/:id", (req, res, nextLayer) => {
 });
 
 router.get("/:table/:id", (req, res) => {
-    try { res.status(200).json(GetOne(req.params.table, req.params.id)); }
+    try { res.status(200).json(
+            JSON.parse(fs.readFileSync(tables[req.params.table]))[req.params.id]); }
     catch (ex) { res.status(404).json(ex); }
 });
 
 router.delete("/:table/:id", (req, res) => {
-    try { res.status(200).json(GetOne(req.params.table, req.params.id)); }
+    try {
+        var table = JSON.parse(fs.readFileSync(tables[req.params.table]));
+        delete table[req.params.id];
+        fs.writeFileSync(tables[req.params.table], JSON.stringify(table))
+        res.status(200).json(null);
+    }
     catch (ex) { res.status(404).json(ex); }
 });
 
