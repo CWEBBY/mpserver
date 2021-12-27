@@ -1,0 +1,4 @@
+MPServer is the testing dev server for a future title, Midnight Pass.
+This tool is used for a localhost NodeJS server that is used to correspond with the game client.
+It is a prototypical tool and is not the code that will represent the final form of the MP server.
+Examples of this are the lack of security and robustness missing in certain areas of functionalty.

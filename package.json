@@ -1,0 +1,14 @@
+{
+  "name": "mpserver",
+  "version": "0.0.1",
+  "description": "Serverside code for MP.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "CWebby",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
