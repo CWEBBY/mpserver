@@ -13,7 +13,7 @@ const tablePath = "./tables/", modulePath = "./modules/", appHeader =
 - SERVER DASHBOARD - SERVER DASHBOARD - SERVER DASHBOARD - SERVER DASHBOARD - SERVER DASHBOARD -
 ==================================================================================================`
 
-// TODO: Verify if router remount breaks the server._router.stack stack...
+// TODO: Verify if router remount breaks the server._router.stack stack... Fix by referencing the layer by name somehow to remove it?... 
 // TODO: Fix issue with stdin.on('data') being a thread block for output (ie, the log) by waiting for input. Fix by making something async...
 
 // Event Handlers
@@ -27,10 +27,6 @@ function OnInit() {
         path = require('path');
         express = require('express');
 
-        server = express();
-        server.use(express.json());
-        server.listen(global["port"]);
-
         HandleOnLogClear();
         HandleOnMount();
     }
@@ -38,6 +34,11 @@ function OnInit() {
 }
 
 function HandleOnMount() {
+    if (server != null)
+        server.close();
+    server = express();
+    server.use(express.json());
+
     if (!fs.existsSync(tablePath)) fs.mkdirSync(tablePath);
     fs.readdirSync(tablePath)
         .forEach(filePath => tables[path.basename(filePath.toLowerCase(), ".json")] = tablePath + filePath);
@@ -45,6 +46,8 @@ function HandleOnMount() {
     fs.readdirSync(modulePath)
         .forEach(filePath => modules[path.basename(filePath.toLowerCase(), ".js")]
             = server.use(require(modulePath + filePath)(tables)));
+
+    server = server.listen(global["port"]);
 }
 
 function HandleOnInput(input) {
@@ -84,7 +87,7 @@ const commands = {
     "logmode: Toggle whether or not the log is active.": function () {
         var old = logging;
         logging = true;
-        HandleOnMessageLog(old ? "Sneeky log mode active." : "Verbose log mode active.");
+        HandleOnMessageLog(old ? "Sneaky log mode active." : "Verbose log mode active.");
         logging = !old;
     },
     "clear: Clears the log.": function () {
